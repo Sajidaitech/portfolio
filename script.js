@@ -260,3 +260,100 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize responsive images
   setupResponsiveImages();
 });
+// Update the project links functionality
+document.addEventListener('DOMContentLoaded', () => {
+  // Original navigation functionality (preserved from original script.js)
+  const links = {
+    home: document.getElementById('home-link'),
+    cv: document.getElementById('cv-link'),
+    blog: document.getElementById('blog-link'),
+    projects: document.getElementById('projects-link'),
+    certificates: document.getElementById('certificates-link'),
+    experience: document.getElementById('experience-link')
+  };
+
+  const sections = {
+    home: document.getElementById('home-section'),
+    cv: document.getElementById('cv-section'),
+    blog: document.getElementById('blog-section'),
+    projects: document.getElementById('projects-section'),
+    certificates: document.getElementById('certificates-section'),
+    experience: document.getElementById('experience-section')
+  };
+
+  function activateSection(link, section) {
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    link.classList.add('active');
+    section.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  Object.keys(links).forEach(key => {
+    if (links[key]) {
+      links[key].addEventListener('click', (e) => {
+        e.preventDefault();
+        activateSection(links[key], sections[key]);
+      });
+    }
+  });
+
+  // Quick links from home page
+  const quickLinks = {
+    'home-to-cv': { link: links.cv, section: sections.cv },
+    'home-to-blog': { link: links.blog, section: sections.blog },
+    'home-to-projects': { link: links.projects, section: sections.projects },
+    'home-to-certificates': { link: links.certificates, section: sections.certificates },
+    'home-to-experience': { link: links.experience, section: sections.experience }
+  };
+
+  Object.keys(quickLinks).forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
+        activateSection(quickLinks[id].link, quickLinks[id].section);
+      });
+    }
+  });
+
+  // Project link tracking functionality
+  function trackExternalLink(url, type, name) {
+    console.log(`User clicked ${type} link for ${name}`);
+    // You could add analytics tracking here if you implement it in the future
+    window.open(url, '_blank');
+  }
+
+  // Update project link handling
+  document.querySelectorAll('.demo-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (!btn.getAttribute('href')) {
+        e.preventDefault();
+        const projectName = btn.closest('.project-card').querySelector('h3').textContent;
+        trackExternalLink('https://sajidaitech.github.io/Year1Project/', 'demo', projectName);
+      }
+    });
+  });
+
+  document.querySelectorAll('.source-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      if (!btn.getAttribute('href')) {
+        e.preventDefault();
+        const projectName = btn.closest('.project-card').querySelector('h3').textContent;
+        trackExternalLink('https://github.com/sajidaitech/Year1Project', 'source', projectName);
+      }
+    });
+  });
+
+  // Blog post read more links
+  document.querySelectorAll('.read-more').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const postTitle = link.closest('.blog-post').querySelector('h3').textContent;
+      console.log(`User clicked to read more about "${postTitle}"`);
+      // You could add analytics tracking here
+    });
+  });
+
+  // Initialize with home section active
+  activateSection(links.home, sections.home);
+});
