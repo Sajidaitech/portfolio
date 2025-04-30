@@ -357,3 +357,91 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize with home section active
   activateSection(links.home, sections.home);
 });
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all navigation links
+  const navLinks = document.querySelectorAll('nav ul li a');
+  
+  // Get all sections
+  const sections = document.querySelectorAll('.section');
+  
+  // Function to show active section and update navigation
+  function showSection(sectionId) {
+    // Hide all sections
+    sections.forEach(section => {
+      section.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+      targetSection.classList.add('active');
+    }
+    
+    // Update active navigation link
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + sectionId) {
+        link.classList.add('active');
+      }
+    });
+  }
+  
+  // Add click event listeners to navigation links
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1); // Remove the # character
+      showSection(targetId);
+      
+      // Update URL without page reload (optional)
+      history.pushState(null, null, '#' + targetId);
+    });
+  });
+  
+  // Handle direct URL access with hash
+  if (window.location.hash) {
+    const sectionId = window.location.hash.substring(1);
+    showSection(sectionId);
+  } else {
+    // Default to home section if no hash in URL
+    showSection('home-section');
+  }
+  
+  // View certificate in full size
+  const viewButtons = document.querySelectorAll('.view-certificate-btn');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const imgSrc = this.getAttribute('data-img');
+      // Create modal for viewing image
+      const modal = document.createElement('div');
+      modal.className = 'certificate-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <img src="${imgSrc}" alt="Certificate">
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Close modal when clicking the X
+      modal.querySelector('.close-modal').addEventListener('click', function() {
+        document.body.removeChild(modal);
+      });
+      
+      // Close modal when clicking outside the image
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+    });
+  });
+  
+  // Logo change button functionality (if used in your site)
+  const changeLogoBtn = document.getElementById('change-logo-btn');
+  if (changeLogoBtn) {
+    changeLogoBtn.addEventListener('click', function() {
+      // Your logo change functionality here
+    });
+  }
+});
