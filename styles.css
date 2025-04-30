@@ -1369,3 +1369,95 @@ footer a:hover {
     font-size: 18px;
   }
 }
+
+/* Modal for certificate viewing */
+.certificate-modal {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+}
+
+.modal-content img {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Ensure all sections have proper display properties */
+.section {
+  display: none;
+  padding: 2rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Make sure education section has proper styling */
+#education-section {
+  min-height: 100vh;
+}
+
+/* Improved navigation styling */
+nav ul li a {
+  position: relative;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #3498db;
+  transition: all 0.3s ease;
+}
+
+nav ul li a.active::after {
+  width: 100%;
+  left: 0;
+}
+
+nav ul li a:hover::after {
+  width: 80%;
+  left: 10%;
+}
