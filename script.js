@@ -1,447 +1,365 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const links = {
-    home: document.getElementById('home-link'),
-    cv: document.getElementById('cv-link'),
-    blog: document.getElementById('blog-link'),
-    projects: document.getElementById('projects-link'),
-    certificates: document.getElementById('certificates-link'),
-    experience: document.getElementById('experience-link')
-  };
+// Portfolio JavaScript Functionality
 
-  const sections = {
-    home: document.getElementById('home-section'),
-    cv: document.getElementById('cv-section'),
-    blog: document.getElementById('blog-section'),
-    projects: document.getElementById('projects-section'),
-    certificates: document.getElementById('certificates-section'),
-    experience: document.getElementById('experience-section')
-  };
-
-  function activateSection(link, section) {
-    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    link.classList.add('active');
-    section.classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  Object.keys(links).forEach(key => {
-    links[key].addEventListener('click', (e) => {
-      e.preventDefault();
-      activateSection(links[key], sections[key]);
-    });
-  });
-
-  // Quick links from home page
-  document.getElementById('home-to-cv').addEventListener('click', (e) => { e.preventDefault(); activateSection(links.cv, sections.cv); });
-  document.getElementById('home-to-blog').addEventListener('click', (e) => { e.preventDefault(); activateSection(links.blog, sections.blog); });
-  document.getElementById('home-to-projects').addEventListener('click', (e) => { e.preventDefault(); activateSection(links.projects, sections.projects); });
-  document.getElementById('home-to-certificates').addEventListener('click', (e) => { e.preventDefault(); activateSection(links.certificates, sections.certificates); });
-  document.getElementById('home-to-experience').addEventListener('click', (e) => { e.preventDefault(); activateSection(links.experience, sections.experience); });
-
-  // Project Demo and Source Buttons
-  const projectNames = ['e-commerce-website', 'full-stack-app'];
-  document.querySelectorAll('.demo-btn').forEach((btn, idx) => {
-    btn.addEventListener('click', () => {
-      window.open(`https://sajidaitech.github.io/${projectNames[idx]}`, '_blank');
-    });
-  });
-  document.querySelectorAll('.source-btn').forEach((btn, idx) => {
-    btn.addEventListener('click', () => {
-      window.open(`https://github.com/sajidaitech/${projectNames[idx]}`, '_blank');
-    });
-  });
-
-  // CV Image modal/lightbox functionality
-  document.querySelectorAll('.cv-image img').forEach(img => {
-    img.addEventListener('click', () => {
-      // Create modal for image viewing if needed
-      const modal = document.createElement('div');
-      modal.classList.add('image-modal');
-      
-      const modalImg = document.createElement('img');
-      modalImg.src = img.src;
-      
-      modal.appendChild(modalImg);
-      document.body.appendChild(modal);
-      
-      // Add close functionality
-      modal.addEventListener('click', () => {
-        modal.remove();
-      });
-    });
-  });
-
-  // Google Drive Download tracking
-  const googleDriveLink = document.getElementById('google-drive-download');
-  if (googleDriveLink) {
-    googleDriveLink.addEventListener('click', () => {
-      console.log('CV downloaded from Google Drive');
-      // You could add analytics tracking here
-    });
-  }
-  
-  // Logo change functionality
-  const profileLogo = document.getElementById('profile-logo');
-  const changeLogoBtn = document.getElementById('change-logo-btn');
-  
-  if (changeLogoBtn) {
-    changeLogoBtn.addEventListener('click', () => {
-      // Create a file input element
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function(event) {
-            profileLogo.src = event.target.result;
-            
-            // Save to localStorage to persist the change
-            localStorage.setItem('customLogo', event.target.result);
-          };
-          reader.readAsDataURL(file);
-        }
-      });
-      
-      fileInput.click();
-    });
-  }
-  
-  // Load saved logo if exists
-  const savedLogo = localStorage.getItem('customLogo');
-  if (savedLogo && profileLogo) {
-    profileLogo.src = savedLogo;
-  }
-  
-  // Experience certificate view buttons
-  document.querySelectorAll('.view-certificate-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const imgSrc = btn.getAttribute('data-img');
-      const modal = document.createElement('div');
-      modal.classList.add('image-modal');
-      
-      const closeBtn = document.createElement('span');
-      closeBtn.classList.add('close-btn');
-      closeBtn.innerHTML = '&times;';
-      
-      const modalImg = document.createElement('img');
-      modalImg.src = imgSrc;
-      
-      modal.appendChild(closeBtn);
-      modal.appendChild(modalImg);
-      document.body.appendChild(modal);
-      
-      // Add close functionality
-      closeBtn.addEventListener('click', () => {
-        modal.remove();
-      });
-      
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-        }
-      });
-    });
-  });
-
-  activateSection(links.home, sections.home);
-});
-// Mobile Navigation Script to be added to script.js
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Mobile menu toggle functionality
-  function setupMobileNav() {
-    // Create the mobile menu toggle button
-    const navContainer = document.querySelector('nav');
-    const navUl = document.querySelector('nav ul');
-    
-    // Add necessary classes
-    navUl.classList.add('expanded');
-    
-    const mobileMenuToggle = document.createElement('button');
-    mobileMenuToggle.className = 'mobile-menu-toggle';
-    mobileMenuToggle.innerHTML = '☰ Menu';
-    
-    // Insert before the nav
-    navContainer.parentNode.insertBefore(mobileMenuToggle, navContainer);
-    
-    // Add click event
-    mobileMenuToggle.addEventListener('click', () => {
-      if (navUl.classList.contains('collapsed')) {
-        navUl.classList.remove('collapsed');
-        navUl.classList.add('expanded');
-        mobileMenuToggle.innerHTML = '✕ Close';
-      } else {
-        navUl.classList.add('collapsed');
-        navUl.classList.remove('expanded');
-        mobileMenuToggle.innerHTML = '☰ Menu';
-      }
-    });
-    
-    // Close menu when clicking a link
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth <= 767) {
-          navUl.classList.add('collapsed');
-          navUl.classList.remove('expanded');
-          mobileMenuToggle.innerHTML = '☰ Menu';
-        }
-      });
-    });
-    
-    // Check screen size on load and resize
-    function checkScreenSize() {
-      if (window.innerWidth <= 767) {
-        navUl.classList.add('collapsed');
-        mobileMenuToggle.style.display = 'block';
-      } else {
-        navUl.classList.remove('collapsed');
-        navUl.classList.add('expanded');
-        mobileMenuToggle.style.display = 'none';
-      }
-    }
-    
-    // Run on load
-    checkScreenSize();
-    
-    // Set up resize listener
-    window.addEventListener('resize', checkScreenSize);
-  }
-  
-  // Initialize mobile navigation
-  setupMobileNav();
-  
-  // Add responsive image handling
-  function setupResponsiveImages() {
-    // Make certificate and experience images responsive
-    const certificateImages = document.querySelectorAll('.certificate-image img, .experience-certificate img');
-    
-    certificateImages.forEach(img => {
-      img.addEventListener('click', () => {
-        if (window.innerWidth <= 767) {
-          // Create lightweight mobile-optimized modal
-          const modal = document.createElement('div');
-          modal.classList.add('image-modal');
-          
-          const closeBtn = document.createElement('span');
-          closeBtn.classList.add('close-btn');
-          closeBtn.innerHTML = '&times;';
-          
-          const modalImg = document.createElement('img');
-          modalImg.src = img.src;
-          
-          modal.appendChild(closeBtn);
-          modal.appendChild(modalImg);
-          document.body.appendChild(modal);
-          
-          // Prevent body scrolling when modal is open
-          document.body.style.overflow = 'hidden';
-          
-          // Close functionality
-          function closeModal() {
-            modal.remove();
-            document.body.style.overflow = '';
-          }
-          
-          closeBtn.addEventListener('click', closeModal);
-          modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-              closeModal();
-            }
-          });
-        }
-      });
-    });
-  }
-  
-  // Initialize responsive images
-  setupResponsiveImages();
-});
-// Update the project links functionality
-document.addEventListener('DOMContentLoaded', () => {
-  // Original navigation functionality (preserved from original script.js)
-  const links = {
-    home: document.getElementById('home-link'),
-    cv: document.getElementById('cv-link'),
-    blog: document.getElementById('blog-link'),
-    projects: document.getElementById('projects-link'),
-    certificates: document.getElementById('certificates-link'),
-    experience: document.getElementById('experience-link')
-  };
-
-  const sections = {
-    home: document.getElementById('home-section'),
-    cv: document.getElementById('cv-section'),
-    blog: document.getElementById('blog-section'),
-    projects: document.getElementById('projects-section'),
-    certificates: document.getElementById('certificates-section'),
-    experience: document.getElementById('experience-section')
-  };
-
-  function activateSection(link, section) {
-    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    link.classList.add('active');
-    section.classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  Object.keys(links).forEach(key => {
-    if (links[key]) {
-      links[key].addEventListener('click', (e) => {
-        e.preventDefault();
-        activateSection(links[key], sections[key]);
-      });
-    }
-  });
-
-  // Quick links from home page
-  const quickLinks = {
-    'home-to-cv': { link: links.cv, section: sections.cv },
-    'home-to-blog': { link: links.blog, section: sections.blog },
-    'home-to-projects': { link: links.projects, section: sections.projects },
-    'home-to-certificates': { link: links.certificates, section: sections.certificates },
-    'home-to-experience': { link: links.experience, section: sections.experience }
-  };
-
-  Object.keys(quickLinks).forEach(id => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.addEventListener('click', (e) => {
-        e.preventDefault();
-        activateSection(quickLinks[id].link, quickLinks[id].section);
-      });
-    }
-  });
-
-  // Project link tracking functionality
-  function trackExternalLink(url, type, name) {
-    console.log(`User clicked ${type} link for ${name}`);
-    // You could add analytics tracking here if you implement it in the future
-    window.open(url, '_blank');
-  }
-
-  // Update project link handling
-  document.querySelectorAll('.demo-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      if (!btn.getAttribute('href')) {
-        e.preventDefault();
-        const projectName = btn.closest('.project-card').querySelector('h3').textContent;
-        trackExternalLink('https://sajidaitech.github.io/Year1Project/', 'demo', projectName);
-      }
-    });
-  });
-
-  document.querySelectorAll('.source-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      if (!btn.getAttribute('href')) {
-        e.preventDefault();
-        const projectName = btn.closest('.project-card').querySelector('h3').textContent;
-        trackExternalLink('https://github.com/sajidaitech/Year1Project', 'source', projectName);
-      }
-    });
-  });
-
-  // Blog post read more links
-  document.querySelectorAll('.read-more').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const postTitle = link.closest('.blog-post').querySelector('h3').textContent;
-      console.log(`User clicked to read more about "${postTitle}"`);
-      // You could add analytics tracking here
-    });
-  });
-
-  // Initialize with home section active
-  activateSection(links.home, sections.home);
-});
 document.addEventListener('DOMContentLoaded', function() {
-  // Get all navigation links
-  const navLinks = document.querySelectorAll('nav ul li a');
-  
-  // Get all sections
-  const sections = document.querySelectorAll('.section');
-  
-  // Function to show active section and update navigation
-  function showSection(sectionId) {
-    // Hide all sections
-    sections.forEach(section => {
-      section.classList.remove('active');
+    // Initialize all functionality
+    initializeNavigation();
+    initializeCertificateModal();
+    initializeLogoChanger();
+    initializeSmoothScrolling();
+    initializeActiveSection();
+});
+
+// Navigation functionality
+function initializeNavigation() {
+    const navLinks = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('.section');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links and sections
+            navLinks.forEach(navLink => navLink.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Show corresponding section
+            const targetSection = document.querySelector(this.getAttribute('href'));
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Smooth scroll to top of main content
+            document.querySelector('main').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    });
+}
+
+// Certificate modal functionality
+function initializeCertificateModal() {
+    // Create modal element
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img src="" alt="Certificate" id="modal-image">
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    const modalImage = modal.querySelector('#modal-image');
+    const closeBtn = modal.querySelector('.close');
+    
+    // Add click event to all view certificate buttons
+    document.querySelectorAll('.view-certificate-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const imageSrc = this.getAttribute('data-img');
+            modalImage.src = imageSrc;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
     });
     
-    // Show selected section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-      targetSection.classList.add('active');
+    // Close modal functionality
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            closeModal();
+        }
+    });
+    
+    function closeModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Logo changer functionality
+function initializeLogoChanger() {
+    const logoChangeBtn = document.getElementById('change-logo-btn');
+    const profileLogo = document.getElementById('profile-logo');
+    const profilePhoto = document.querySelector('.profile-photo');
+    
+    // Array of logo options
+    const logoOptions = [
+        'assets/logo/logo.jpg',
+        'assets/logo/logo2.jpg',
+        'assets/logo/logo3.jpg',
+        'assets/logo/logo4.jpg'
+    ];
+    
+    let currentLogoIndex = 0;
+    
+    logoChangeBtn.addEventListener('click', function() {
+        // Cycle through logos
+        currentLogoIndex = (currentLogoIndex + 1) % logoOptions.length;
+        const newLogo = logoOptions[currentLogoIndex];
+        
+        // Update both header logo and profile photo
+        profileLogo.src = newLogo;
+        if (profilePhoto) {
+            profilePhoto.src = newLogo;
+        }
+        
+        // Add animation effect
+        profileLogo.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            profileLogo.style.transform = 'scale(1)';
+        }, 150);
+    });
+}
+
+// Smooth scrolling for anchor links
+function initializeSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Active section detection on scroll
+function initializeActiveSection() {
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('nav a');
+    
+    function updateActiveSection() {
+        // Find the currently visible section
+        let currentSection = null;
+        sections.forEach(section => {
+            if (section.classList.contains('active')) {
+                currentSection = section;
+            }
+        });
+        
+        if (currentSection) {
+            const sectionId = currentSection.getAttribute('id');
+            navLinks.forEach(link => {
+                const linkHref = link.getAttribute('href');
+                if (linkHref === `#${sectionId}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
     }
     
-    // Update active navigation link
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === '#' + sectionId) {
-        link.classList.add('active');
-      }
+    // Initial update
+    updateActiveSection();
+}
+
+// Add loading animation to images
+function addImageLoadingEffect() {
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        img.addEventListener('load', function() {
+            this.style.opacity = '1';
+        });
+        
+        // Add loading effect
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s ease';
     });
-  }
-  
-  // Add click event listeners to navigation links
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const targetId = this.getAttribute('href').substring(1); // Remove the # character
-      showSection(targetId);
-      
-      // Update URL without page reload (optional)
-      history.pushState(null, null, '#' + targetId);
+}
+
+// Add hover effects to cards
+function addHoverEffects() {
+    const cards = document.querySelectorAll('.certificate-detail, .experience-detail, .blog-intro');
+    
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.2)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
     });
-  });
-  
-  // Handle direct URL access with hash
-  if (window.location.hash) {
-    const sectionId = window.location.hash.substring(1);
-    showSection(sectionId);
-  } else {
-    // Default to home section if no hash in URL
-    showSection('home-section');
-  }
-  
-  // View certificate in full size
-  const viewButtons = document.querySelectorAll('.view-certificate-btn');
-  viewButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const imgSrc = this.getAttribute('data-img');
-      // Create modal for viewing image
-      const modal = document.createElement('div');
-      modal.className = 'certificate-modal';
-      modal.innerHTML = `
-        <div class="modal-content">
-          <span class="close-modal">&times;</span>
-          <img src="${imgSrc}" alt="Certificate">
-        </div>
-      `;
-      document.body.appendChild(modal);
-      
-      // Close modal when clicking the X
-      modal.querySelector('.close-modal').addEventListener('click', function() {
-        document.body.removeChild(modal);
-      });
-      
-      // Close modal when clicking outside the image
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          document.body.removeChild(modal);
+}
+
+// Add typewriter effect to tagline
+function addTypewriterEffect() {
+    const tagline = document.querySelector('.tagline');
+    if (tagline) {
+        const text = tagline.textContent;
+        tagline.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                tagline.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
         }
-      });
+        
+        // Start typewriter effect after a delay
+        setTimeout(typeWriter, 1000);
+    }
+}
+
+// Add parallax effect to header
+function addParallaxEffect() {
+    const header = document.querySelector('header');
+    
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        
+        if (header) {
+            header.style.transform = `translateY(${rate}px)`;
+        }
     });
-  });
-  
-  // Logo change button functionality (if used in your site)
-  const changeLogoBtn = document.getElementById('change-logo-btn');
-  if (changeLogoBtn) {
-    changeLogoBtn.addEventListener('click', function() {
-      // Your logo change functionality here
+}
+
+// Add progress bar for page loading
+function addProgressBar() {
+    const progressBar = document.createElement('div');
+    progressBar.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        z-index: 9999;
+        transition: width 0.3s ease;
+    `;
+    document.body.appendChild(progressBar);
+    
+    window.addEventListener('scroll', function() {
+        const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+        progressBar.style.width = scrollPercent + '%';
     });
-  }
+}
+
+// Add animation to skill items
+function animateSkills() {
+    const skillItems = document.querySelectorAll('.skills-list li');
+    
+    skillItems.forEach((item, index) => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            item.style.transition = 'all 0.5s ease';
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+}
+
+// Add social media hover effects
+function addSocialMediaEffects() {
+    const socialIcons = document.querySelectorAll('.social-icon');
+    
+    socialIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.1)';
+        });
+        
+        icon.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// Initialize additional effects after DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        addImageLoadingEffect();
+        addHoverEffects();
+        addTypewriterEffect();
+        addParallaxEffect();
+        addProgressBar();
+        animateSkills();
+        addSocialMediaEffects();
+    }, 500);
+});
+
+// Add resize handler for responsive behavior
+window.addEventListener('resize', function() {
+    // Update navigation layout on resize
+    const nav = document.querySelector('nav');
+    if (window.innerWidth < 768) {
+        nav.classList.add('mobile-nav');
+    } else {
+        nav.classList.remove('mobile-nav');
+    }
+});
+
+// Add error handling for broken images
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    
+    images.forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            
+            // Create placeholder
+            const placeholder = document.createElement('div');
+            placeholder.style.cssText = `
+                width: ${this.width || 200}px;
+                height: ${this.height || 200}px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 2px dashed rgba(255, 255, 255, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 14px;
+                border-radius: 10px;
+            `;
+            placeholder.textContent = 'Image not found';
+            
+            this.parentNode.insertBefore(placeholder, this);
+        });
+    });
+});
+
+// Add keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const navLinks = document.querySelectorAll('nav a');
+    const activeIndex = Array.from(navLinks).findIndex(link => link.classList.contains('active'));
+    
+    if (e.key === 'ArrowLeft' && activeIndex > 0) {
+        navLinks[activeIndex - 1].click();
+    } else if (e.key === 'ArrowRight' && activeIndex < navLinks.length - 1) {
+        navLinks[activeIndex + 1].click();
+    }
+});
+
+// Add page visibility API for performance
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        // Pause animations when page is not visible
+        document.body.style.animationPlayState = 'paused';
+    } else {
+        // Resume animations when page becomes visible
+        document.body.style.animationPlayState = 'running';
+    }
 });
